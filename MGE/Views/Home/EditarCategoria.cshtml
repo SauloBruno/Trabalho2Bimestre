@@ -1,0 +1,32 @@
+﻿@model MGE.ViewModels.CategoriasEditViewModel
+
+
+<div class="alert-danger" >
+    @if (@Model.msgFail != null)
+    {
+        <p style="text-align: center;">@Model.msgFail</p>
+    }
+</div>
+
+<h1>Edição de Categoria</h1>
+
+<table class="table table-striped">
+   
+    <fieldset>
+        <legend>Editar Categoria</legend>
+        <form method="post" asp-action="EditarCategoria" asp-controller="Home" > 
+            <input type="hidden" name="Ed" value="@Model.Id" />
+                    
+            <div class="form-group">
+                <label for="Descricao">Descricao:</label>
+                <input type="text" class="form-control" value="@Model.Categoria.Descricao" id="Descricao" name="Descricao" />
+            </div>
+            
+            <div class="form-group">               
+                <button type="submit" class="btn btn-primary" >Editar</button>
+            </div>
+        </form>
+    </fieldset>
+    <hr/>
+        
+</table>
