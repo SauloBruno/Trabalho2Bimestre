@@ -120,11 +120,115 @@ namespace MGE.Controllers
         [HttpGet]
         public IActionResult SessaoParametro()
         {
+            var viewModel = new ParametrosViewModel();
+            viewModel.MsgSucess = (string)TempData["cad-parametro-sucess"];
+            viewModel.MsgFail = (string) TempData["cad-parametro-error"];
+
+            List<ParametrosEntity> lista = _parametrosService.BuscarTodos();
+
+            foreach (var p in lista)
+            {
+                viewModel.parametros.Add(new ParametrosEntity()
+                {
+                    Id = p.Id,
+                    ValorKwh = p.ValorKwh,
+                    FaixaConsumoAlto = p.FaixaConsumoAlto,
+                    FaixaConsumoMedio = p.FaixaConsumoMedio
+                });
+            }
             
-            
-            return View();
+            return View(viewModel);
         }
 
+        [HttpPost]
+        public IActionResult SessaoParametro(ParametrosRequestModel rm)
+        {
+            var valorKwh = rm.ValorKwh;
+            var faixaConsumoAlto = rm.FaixaConsumoAlto;
+            var faixaConsumoMedio = rm.FaixaConsumoMedio;
+            
+            if (valorKwh == 0)
+            {
+                TempData["cad-parametro-error"] = "Valor de Kwh não pode ser 0!";
+                return RedirectToAction("SessaoParametro");
+            }
+
+            if (faixaConsumoAlto == 0)
+            {
+                TempData["cad-parametro-error"] = "Faixa de consumo alto não pode ser 0!";
+                return RedirectToAction("SessaoParametro");
+            }
+            
+            if (faixaConsumoMedio == 0)
+            {
+                TempData["cad-parametro-error"] = "Faixa de consumo medio não pode ser 0!";
+                return RedirectToAction("SessaoParametro");
+            }
+            
+            _parametrosService.InserirParametro(valorKwh, faixaConsumoAlto, faixaConsumoMedio);
+            TempData["cad-parametro-sucess"] = "Parametro cadastrada com sucesso!";
+            
+            return RedirectToAction("SessaoParametro");
+        }
+        
+        public IActionResult ExcluirParametro(int id)
+        {
+            _parametrosService.Remover(id);
+            
+            return RedirectToAction("SessaoParametro");
+        }
+        
+        
+        [HttpGet]
+        public IActionResult EditarParametro(int id)
+        {
+            var p = _parametrosService.BuscarPeloId(id);
+
+            var viewModel = new ParametrosEditViewModel();
+            viewModel.Id = p.Id;
+            viewModel.msgFail = (string)TempData["edt-parametro-error"];
+
+
+            viewModel.Parametro = new Param()
+            {
+                ValorKwh = p.ValorKwh,
+                FaixaConsumoAlto = p.FaixaConsumoAlto,
+                FaixaConsumoMedio = p.FaixaConsumoMedio
+            };
+            
+            return View(viewModel);
+        }
+        
+        [HttpPost]
+        public IActionResult EditarParametro(ParametrosRequestModel rm)
+        {
+            var ed = rm.Ed;
+            var valorKwh = rm.ValorKwh;
+            var faixaConsumoAlto = rm.FaixaConsumoAlto;
+            var faixaConsumoMedio = rm.FaixaConsumoMedio;
+
+            if (valorKwh == 0)
+            {
+                TempData["edt-parametro-error"] = "Valor de Kwh não pode ser 0!";
+                return RedirectToAction("EditarParametro");
+            }
+
+            if (faixaConsumoAlto == 0)
+            {
+                TempData["edt-parametro-error"] = "Faixa de consumo alto não pode ser 0!";
+                return RedirectToAction("EditarParametro");
+            }
+            
+            if (faixaConsumoMedio == 0)
+            {
+                TempData["edt-parametro-error"] = "Faixa de consumo medio não pode ser 0!";
+                return RedirectToAction("EditarParametro");
+            }
+            
+            _parametrosService.Editar(ed, valorKwh, faixaConsumoAlto, faixaConsumoMedio);           
+            return RedirectToAction("SessaoParametro");
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

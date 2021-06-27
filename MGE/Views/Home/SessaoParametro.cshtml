@@ -1,0 +1,68 @@
+﻿@model MGE.ViewModels.ParametrosViewModel
+
+<h1>Sessão Parametro</h1>
+
+<div class="alert-success" >
+    @if (@Model.MsgSucess != null)
+    {
+        <p style="text-align: center;">@Model.MsgSucess</p>
+    }
+</div>
+
+<div class="alert-danger">
+    @if (@Model.MsgFail != null)
+    {
+        <p style="text-align: center;">@Model.MsgFail</p>
+    }
+</div>
+
+<table class="table table-striped">
+   
+    <fieldset>
+        <legend>Cadastro de Parametros</legend>
+        <form method="post" asp-action="SessaoParametro" asp-controller="Home" > 
+            
+            <div class="form-group">
+                <label for="ValorKwh">ValorKwh:</label>
+                <input type="text" class="form-control" id="ValorKwh" name="ValorKwh" />
+            </div>
+            
+            <div class="form-group">
+                <label for="FaixaConsumoAlto">FaixaConsumoAlto:</label>
+                <input type="text" class="form-control" id="FaixaConsumoAlto" name="FaixaConsumoAlto" />
+            </div>
+            
+            <div class="form-group">
+                <label for="FaixaConsumoMedio">FaixaConsumoMedio:</label>
+                <input type="text" class="form-control" id="FaixaConsumoMedio" name="FaixaConsumoMedio" />
+            </div>
+
+            <div class="form-group">               
+                <button type="submit" class="btn btn-primary" >Salvar</button>
+            </div>
+        </form>
+    </fieldset>
+    <hr/>
+    <legend>Parametros</legend>
+    <thead>
+    <tr>
+        <th>ValorKwh</th>
+        <th>FaixaConsumoAlto</th>
+        <th>FaixaConsumoMedio</th>
+        <th>Ação 1</th>
+        <th>Ação 2</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in @Model.parametros)
+        {
+            <tr>
+                <td>@p.ValorKwh</td>
+                <td>@p.FaixaConsumoAlto</td>
+                <td>@p.FaixaConsumoMedio</td>
+                <td><a asp-controller="Home" asp-action="EditarParametro" asp-route-id="@p.Id" >Editar</a></td>
+                <td><a asp-controller="Home" asp-action="ExcluirParametro" asp-route-id="@p.Id" >Remover</a></td>
+            </tr>
+        }
+    </tbody>    
+</table>
