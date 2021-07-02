@@ -1,0 +1,43 @@
+﻿@model MGE.ViewModels.HomeViewModel
+
+<div>
+    <h1 align="center">Mapa de Gastos Energéticos</h1>
+</div>
+
+<table class="table table-striped">
+    <legend align="center" >Categorias que mais consomem</legend>
+    <thead>
+    <tr>
+        <th>Categoria</th>
+        <th>Consumo mensal kwh</th>
+        <th>Valor mensal</th>
+    </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
+<br/>
+<br/>
+
+<table class="table table-striped">
+    <legend align="center" >Itens que mais consomem</legend>
+    <thead>
+    <tr>
+        <th>Item</th>
+        <th>Consumo mensal kwh</th>
+        <th>Valor mensal</th>
+    </tr>
+    </thead>
+    <tbody  >
+        @foreach (var i in @Model.it)
+        {
+            <tr>
+                <td>@i.Nome</td>
+                <td>@i.ConsumoKwt</td>
+                <td>R$ @i.ConsumoMesal</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

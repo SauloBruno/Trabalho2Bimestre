@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -30,6 +31,55 @@ namespace MGE.Controllers
             return View();
         }
 
+        public IActionResult SessaoHome()
+        {
+            var l1 = _itensService.BuscarTodos();
+            List<ItemApoioEntity> l2 = new List<ItemApoioEntity>();
+            List<ItemApoioEntity> l3 = new List<ItemApoioEntity>();
+
+            
+            foreach (var l in l1)
+            {
+                l2.Add(new ItemApoioEntity()
+                {
+                    Nome = l.Nome,
+                    ConsumoKwt = (l.ConsumoWatts * (l.HorasUsoDiario * 30)) / 1000,
+                    ConsumoMesal = (((double)l.ConsumoWatts * (l.HorasUsoDiario * 30)) / 1000) * 0.30  
+                });
+            }
+
+            ItemApoioEntity p = new ItemApoioEntity();
+            ItemApoioEntity s = new ItemApoioEntity();
+            
+            for (int i = 0; i < l2.Count; i++)
+            {
+                for (int j = 0; j < l2.Count - 1; j++)
+                {
+                    if (l2[j].ConsumoMesal < l2[j + 1].ConsumoMesal)
+                    {
+                        p = l2[j];
+                        s = l2[j + 1];
+                        l2[j + 1] = p;
+                        l2[j] = s;
+                    }
+                }
+            }
+            
+            var viewModel = new HomeViewModel();
+
+            for (int i = 0; i < 5; i++)
+            {
+                viewModel.it.Add(new ItemApoioEntity()
+                {
+                    Nome = l2[i].Nome,
+                    ConsumoKwt = l2[i].ConsumoKwt,
+                    ConsumoMesal = l2[i].ConsumoMesal
+                });
+            }
+            
+            return View(viewModel);
+        }
+        
         [HttpGet]
         public IActionResult SessaoCategoria()
         {
