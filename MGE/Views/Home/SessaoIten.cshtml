@@ -1,0 +1,95 @@
+@model MGE.ViewModels.ItensViewModel
+
+<h1>Sessão Itens</h1>
+
+<div class="alert-success" >
+    @if (@Model.MsgSucess != null)
+    {
+        <p style="text-align: center;">@Model.MsgSucess</p>
+    }
+</div>
+
+<div class="alert-danger">
+    @if (@Model.MsgFail != null)
+    {
+        <p style="text-align: center;">@Model.MsgFail</p>
+    }
+</div>
+
+<table class="table table-striped">
+   
+    <fieldset>
+        <legend>Cadastro de Itens</legend>
+        <form method="post" asp-action="SessaoIten" asp-controller="Home" >
+
+            <div class="form-group" >
+                <label for="Nome">Categoria:</label>
+                <select id="Categoria" name="Categoria" >
+                    @foreach (var c in @Model.Categorias)
+                    {
+                        <option class="form-control" value="@c.Id" >@c.Descricao</option>
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="Nome">Nome:</label>
+                <input type="text" class="form-control" id="Nome" name="Nome" />
+            </div>
+            
+            <div class="form-group">
+                <label for="Descricao">Descrição:</label>
+                <input type="text" class="form-control" id="Descricao" name="Descricao" />
+            </div>
+            
+            <div class="form-group">
+                <label for="ConsumoWatts">Consumo em Watts:</label>
+                <input type="text" class="form-control" id="ConsumoWatts" name="ConsumoWatts" />
+            </div>
+
+            <div class="form-group">
+                <label for="HorasUsoDiario">Horas de uso diario:</label>
+                <input type="text" class="form-control" id="HorasUsoDiario" name="HorasUsoDiario" />
+            </div>
+            
+            <div class="form-group">
+                <label for="DataFabricacao">Data de fabricação (dd/mm/yyyy):</label>
+                <input type="text" class="form-control" id="DataFabricacao" name="DataFabricacao" />
+            </div>
+            
+            <div class="form-group">               
+                <button type="submit" class="btn btn-primary" >Salvar</button>
+            </div>
+            
+        </form>
+    </fieldset>
+    <hr/>
+    <legend>Itens</legend>
+    <thead>
+    <tr>
+        <th>Categoria</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Consumo Watts</th>
+        <th>Consumo diario</th>
+        <th>Data de fabricação</th>
+        <th>Ação 1</th>
+        <th>Ação 2</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in @Model.Itens)
+        {
+            <tr>
+                <td>@i.Categoria.Descricao</td>
+                <td>@i.Nome</td>
+                <td>@i.Descricao</td>
+                <td>@i.ConsumoWatts wts</td>
+                <td>@i.HorasUsoDiario h</td>
+                <td>@i.DataFabricacao</td>
+                <td><a asp-controller="Home" asp-action="EditarItem" asp-route-id="@i.Id">Editar</a></td>
+                <td><a asp-controller="Home" asp-action="ExcluirItem" asp-route-id="@i.Id">Remover</a></td>
+            </tr>
+        }
+    </tbody>    
+</table>

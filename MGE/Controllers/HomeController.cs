@@ -112,9 +112,162 @@ namespace MGE.Controllers
         [HttpGet]
         public IActionResult SessaoIten()
         {
+            var viewModel = new ItensViewModel();   
+            viewModel.MsgSucess = (string)TempData["cad-item-sucess"];
+            viewModel.MsgFail = (string) TempData["cad-item-error"];
+
+            List<CategoriasEntity> l1 = _categoriasService.BuscarTodos();
+            List<ItensEntity> l2 = _itensService.BuscarTodos();
+
+            foreach (var c in l1)
+            {
+                viewModel.Categorias.Add(new CategoriasEntity()
+                {
+                    Id = c.Id,
+                    Descricao = c.Descricao
+                });
+            }
+
+            foreach (var i in l2)
+            {
+                viewModel.Itens.Add(new ItensEntity()
+                {
+                    Id = i.Id,
+                    Nome = i.Nome,
+                    Descricao = i.Descricao,
+                    ConsumoWatts = i.ConsumoWatts,
+                    HorasUsoDiario = i.HorasUsoDiario,
+                    DataFabricacao = i.DataFabricacao,
+                    Categoria = i.Categoria
+                });
+            }
             
+            return View(viewModel);
+        }
+        
+        [HttpPost]
+        public IActionResult SessaoIten(ItensRequestModel rm)
+        {
+            var categoria = _categoriasService.BuscarPeloId(rm.Categoria);
+            var nome = rm.Nome;
+            var descricao = rm.Descricao;
+            var consumoWatts = rm.ConsumoWatts;
+            var horaUso = rm.HorasUsoDiario;
+            var dataFabricacao = rm.DataFabricacao;
             
-            return View();
+            if (nome == null)
+            {
+                TempData["cad-item-error"] = "Campo nome deve ser preenchido!";
+                return RedirectToAction("SessaoIten");
+            }
+            
+            if (descricao == null)
+            {
+                TempData["cad-item-error"] = "Campo descrição deve ser preenchido!";
+                return RedirectToAction("SessaoIten");
+            }
+
+            if (consumoWatts == 0)
+            {
+                TempData["cad-item-error"] = "Consumo em Watts não pode ser 0!";
+                return RedirectToAction("SessaoIten");
+            }
+            
+            if (horaUso == 0)
+            {
+                TempData["cad-item-error"] = "Horas de uso diarias não pode ser 0!";
+                return RedirectToAction("SessaoIten");
+            }
+            
+            if (dataFabricacao == null || !dataFabricacao.Contains("/"))
+            {
+                TempData["cad-item-error"] = "Data de fabricação deve ser preenchida corretamente!";
+                return RedirectToAction("SessaoIten");
+            }
+            
+            TempData["cad-item-sucess"] = "Item inserido com sucesso!";
+            _itensService.InserirItem(categoria, nome, descricao, consumoWatts, horaUso, dataFabricacao);
+            
+            return RedirectToAction("SessaoIten");
+        }
+        
+        public IActionResult ExcluirItem(Guid id)
+        {
+            _itensService.Remover(id);
+            
+            return RedirectToAction("SessaoIten");
+        }
+        [HttpGet]
+        public IActionResult EditarItem(Guid id)
+        {
+            var it = _itensService.BuscarPeloId(id);
+
+            var viewModel = new ItensEditViewModel();
+            viewModel.Id = it.Id;
+            viewModel.Item.IdCat = it.Categoria.Id;
+            viewModel.Item.Nome = it.Nome;
+            viewModel.Item.Descricao = it.Descricao;
+            viewModel.Item.ConsumoWatts = it.ConsumoWatts;
+            viewModel.Item.HorasUsoDiario = it.HorasUsoDiario;
+            viewModel.Item.DataFabricacao = it.DataFabricacao.ToString("dd/MM/yyyy");
+            viewModel.MsgFail = (string) TempData["Edit-iten-error"];
+
+            var l1 = _categoriasService.BuscarTodos();
+            foreach (var l in l1)
+            {
+                viewModel.Categorias.Add(new CategoriasEntity()
+                {
+                    Id = l.Id,
+                    Descricao = l.Descricao
+                });
+            }
+
+            return View(viewModel);
+        }
+        
+        [HttpPost]
+        public IActionResult EditarItem(ItensRequestModel rm)
+        {
+            var ed = rm.Ed;
+            var categoria = _categoriasService.BuscarPeloId(rm.Categoria);
+            var nome = rm.Nome;
+            var descricao = rm.Descricao;
+            var consumoWatts = rm.ConsumoWatts;
+            var horaUso = rm.HorasUsoDiario;
+            var dataFabricacao = rm.DataFabricacao;
+            
+            if (nome == null)
+            {
+                TempData["Edit-iten-error"] = "Campo nome deve ser preenchido!";
+                return RedirectToAction("EditarItem");
+            }
+            
+            if (descricao == null)
+            {
+                TempData["Edit-iten-error"] = "Campo descrição deve ser preenchido!";
+                return RedirectToAction("EditarItem");
+            }
+
+            if (consumoWatts == 0)
+            {
+                TempData["Edit-iten-error"] = "Consumo em Watts não pode ser 0!";
+                return RedirectToAction("EditarItem");
+            }
+            
+            if (horaUso == 0)
+            {
+                TempData["Edit-iten-error"] = "Horas de uso diarias não pode ser 0!";
+                return RedirectToAction("EditarItem");
+            }
+            
+            if (dataFabricacao == null || !dataFabricacao.Contains("/"))
+            {
+                TempData["Edit-iten-error"] = "Data de fabricação deve ser preenchida corretamente!";
+                return RedirectToAction("EditarItem");
+            }
+            
+            _itensService.EditarItem(ed, categoria, nome, descricao, consumoWatts, horaUso, dataFabricacao);
+            return RedirectToAction("SessaoIten");
         }
         
         [HttpGet]

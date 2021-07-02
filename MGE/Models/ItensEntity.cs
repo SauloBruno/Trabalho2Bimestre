@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Net.Mime;
 
 namespace MGE.Models
 {
     public class ItensEntity
     {
-        public char Id { get; set; }
+        public Guid Id { get; set; }
         
         public CategoriasEntity Categoria { get; set; }
         

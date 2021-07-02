@@ -1,0 +1,67 @@
+﻿@model MGE.ViewModels.ItensEditViewModel
+
+<h1>Edição de Itens</h1>
+
+<div class="alert-danger">
+    @if (@Model.MsgFail != null)
+    {
+        <p style="text-align: center;">@Model.MsgFail</p>
+    }
+</div>
+
+<table class="table table-striped">
+   
+    <fieldset>
+        <legend>Editar Itens</legend>
+        <form method="post" asp-action="EditarItem" asp-controller="Home" >
+            <input type="hidden" name="Ed" value="@Model.Id" /> 
+            
+            <div class="form-group" >
+                <label for="Nome">Categoria:</label>
+                <select id="Categoria" name="Categoria" >
+                    @foreach (var c in @Model.Categorias)
+                    {
+                        @if (c.Id == @Model.Item.IdCat)
+                        {
+                            <option class="form-control" selected value="@c.Id" >@c.Descricao</option>
+                        }
+                        @if (c.Id != @Model.Item.IdCat)
+                        {
+                            <option class="form-control" value="@c.Id" >@c.Descricao</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="Nome">Nome:</label>
+                <input type="text" class="form-control" id="Nome" name="Nome" value="@Model.Item.Nome" />
+            </div>
+            
+            <div class="form-group">
+                <label for="Descricao">Descrição:</label>
+                <input type="text" class="form-control" id="Descricao" name="Descricao" value="@Model.Item.Descricao" />
+            </div>
+            
+            <div class="form-group">
+                <label for="ConsumoWatts">Consumo em Watts:</label>
+                <input type="text" class="form-control" id="ConsumoWatts" name="ConsumoWatts" value="@Model.Item.ConsumoWatts" />
+            </div>
+
+            <div class="form-group">
+                <label for="HorasUsoDiario">Horas de uso diario:</label>
+                <input type="text" class="form-control" id="HorasUsoDiario" name="HorasUsoDiario" value="@Model.Item.HorasUsoDiario" />
+            </div>
+            
+            <div class="form-group">
+                <label for="DataFabricacao">Data de fabricação (dd/mm/yyyy):</label>
+                <input type="text" class="form-control" id="DataFabricacao" name="DataFabricacao" value="@Model.Item.DataFabricacao" />
+            </div>
+            
+            <div class="form-group">               
+                <button type="submit" class="btn btn-primary" >Editar</button>
+            </div>
+            
+        </form>
+    </fieldset>
+</table>
