@@ -4,24 +4,51 @@
     <h1 align="center">Mapa de Gastos Energéticos</h1>
 </div>
 
-<table class="table table-striped">
-    <legend align="center" >Categorias que mais consomem</legend>
-    <thead>
-    <tr>
-        <th>Categoria</th>
-        <th>Consumo mensal kwh</th>
-        <th>Valor mensal</th>
-    </tr>
-    </thead>
-    <tbody>
-        
-    </tbody>
-</table>
+<br/>
+
+<div class="row">
+    
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                <legend align="center">Consumo Mensal</legend>
+            </div>
+            <div class="card-body">
+                <legend align="center">@Model.dados.ConsumoMensal Watts</legend>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                <legend align="center">Total Mensal</legend>
+            </div>
+            <div class="card-body">
+                <legend align="center">R$ @Model.dados.TotalMensal</legend>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                <legend align="center">Faixa de Consumo</legend>
+            </div>
+            <div class="card-body">
+                <legend align="center">@Model.dados.Status</legend>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
 <br/>
 <br/>
 
 <table class="table table-striped">
     <legend align="center" >Itens que mais consomem</legend>
+    <br/>
     <thead>
     <tr>
         <th>Item</th>

@@ -76,6 +76,25 @@ namespace MGE.Controllers
                     ConsumoMesal = l2[i].ConsumoMesal
                 });
             }
+
+            foreach (var l in l2)
+            {
+                viewModel.dados.ConsumoMensal += (double)l.ConsumoKwt;
+                viewModel.dados.TotalMensal += l.ConsumoMesal;
+            }
+
+            if (viewModel.dados.ConsumoMensal < 250)
+            {
+                viewModel.dados.Status = "Baixo";
+            }
+            else if (viewModel.dados.ConsumoMensal >= 250 && viewModel.dados.ConsumoMensal < 500)
+            {
+                viewModel.dados.Status = "Média";
+            }
+            else
+            {
+                viewModel.dados.Status = "Alto";
+            }
             
             return View(viewModel);
         }
